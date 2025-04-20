@@ -1,8 +1,13 @@
 package me.bzo.bzo.controller;
 
 import lombok.RequiredArgsConstructor;
+import me.bzo.bzo.dto.PostRequest;
 import me.bzo.bzo.entity.Post;
 import me.bzo.bzo.service.PostService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,33 +17,32 @@ import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
-@Controller
+@RestController
+@RequestMapping("/api/posts")
 public class PostController {
 
     private final PostService postService;
 
-    //게시글 조회
-    @GetMapping("/questions")
-    public String getPosts(Model model){
-        List<Post> posts = postService.getAllPosts();
-        model.addAttribute("posts", posts);
-        return "questionsList";
+    @GetMapping
+    public ResponseEntity<?> getPosts() {
+        try {
+            List<Post> posts = postService.getAllPosts();
+            return ResponseEntity.ok(posts);  // 정상적으로 게시글을 반환
+        } catch (Exception e) {
+            // 예외가 발생했을 때 처리
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("게시글 조회 중 오류가 발생했습니다.");
+        }
     }
-    //게시글 작성 폼으로 이동
-    @GetMapping("/posts/new")
-    public String createPostForm(Model model) {
-        return "createPostForm";
-    }
-
     //게시글 작성
-    @PostMapping("/posts")
-    public String createPost(@RequestParam("title") String title,
-                             @RequestParam("content") String content,
-                             @RequestParam("writer") String writer,
-                             @RequestParam("board") String board,
-                             @RequestParam(value = "image", required = false) MultipartFile image,
-                             Model model) throws IOException {
-        postService.createPost(title, content, writer, board, image);
-        return "redirect:/posts";
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createPost(@RequestPart("post") PostRequest postRequest,
+                                       @RequestParam(value = "image", required = false) MultipartFile image) {
+        try {
+            Post post = postService.createPost(postRequest, image);
+            return ResponseEntity.ok(post);
+        }catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 업로드 실패");
+        }
     }
 }
