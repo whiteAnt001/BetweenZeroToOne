@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 @Controller
 public class MainController {
-    @GetMapping("/home")
+
+    //플랫폼 메인화면
+    @GetMapping("/")
     private String home(Model model) {
         return "main";
     }
-
 }
