@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -28,6 +29,22 @@ public class PostService {
     //게시글 목록 조회
     public List<Post> getAllPosts() {
         return postRepository.findAll();
+    }
+
+    //게시글 수정
+    @Transactional
+    public Post updatePost(Long id, PostRequest postRequest) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+
+        //해시태그 변환하여 저장
+        List<Hashtag> hashtags = postRequest.getHashtags().stream()
+                .map(name -> hashtagRepository.findByName(name).orElseGet(() -> { Hashtag newHashTag = new Hashtag(name);
+                    return hashtagRepository.save(newHashTag);
+                }))
+                .collect(Collectors.toList());
+
+        post.update(postRequest.getTitle(), postRequest.getContent(), hashtags);
+        return postRepository.save(post);
     }
 
     //게시글 생성

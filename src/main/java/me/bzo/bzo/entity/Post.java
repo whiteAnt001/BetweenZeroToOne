@@ -36,4 +36,11 @@ public class Post {
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
+
+    //수정 메서드 추가
+    public void update(String title, String content, List<Hashtag> hashtags){
+        this.title = title;
+        this.content = content;
+        this.hashtags = hashtags;
+    }
 }
