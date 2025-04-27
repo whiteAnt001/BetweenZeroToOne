@@ -15,6 +15,17 @@ import java.util.List;
 public class ViewController {
     private final PostRepository postRepository;
 
+    //로그인 화면
+    @GetMapping("/login")
+    private String login(Model model) {
+        return "login";
+    }
+
+    //회원가입 화면
+    @GetMapping("/signup")
+    private String signup(Model model) {
+        return "signup";
+    }
     //플랫폼 메인화면
     @GetMapping("/")
     private String home(Model model) {

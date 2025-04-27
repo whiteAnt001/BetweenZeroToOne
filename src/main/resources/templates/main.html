@@ -8,12 +8,7 @@
 </head>
 <body>
 <!-- 사이드바 -->
-<div class="sidebar">
-    <a href="#">QnA</a>
-    <a href="#">커뮤니티</a>
-    <a href="#">지식</a>
-    <a href="#">기타</a>
-</div>
+<div th:replace="sidebar :: sidebar"></div>
 
 <!-- 메인 콘텐츠 -->
 <div class="main-content">
@@ -23,12 +18,21 @@
     </div>
 
     <!-- 질문 목록 -->
+    <div th:each="post : ${posts}" class="question-box">
         <div class="d-flex justify-content-between">
             <div>
+                <h5>
+                    <a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}">게시글 제목</a>
+                </h5>
+                <div class="question-meta">
+                    <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span> -
+                    <span class="text-dark fw-semibold" th:text="${post.writer}">작성자</span>
                 </div>
                 <div class="mt-2">
+                    <span th:each="tag : ${post.hashtags}" class="tag" th:text="${tag.name}">#태그</span>
                 </div>
             </div>
+
         </div>
     </div>
 
