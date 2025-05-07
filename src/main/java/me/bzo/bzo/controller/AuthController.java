@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/auth")
@@ -39,6 +41,6 @@ public class AuthController {
         String token = jwtProvider.createToken(user.getEmail());
         // 쿠키 생성 및 응답에 추가
         response.addCookie(CookieUtil.createTokenCookie(token));
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok(Map.of("token", token));
     }
 }

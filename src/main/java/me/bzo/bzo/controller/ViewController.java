@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.security.Principal;
 import java.util.List;
 @RequiredArgsConstructor
 @Controller
@@ -49,7 +50,12 @@ public class ViewController {
 
     //게시글 작성 폼으로 이동
     @GetMapping("/posts/new")
-    public String createPostForm(Model model) {
+    public String createPostForm(Model model, Principal principal) {
+        if(principal == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("name", principal.getName());
         return "createPostForm";
     }
 
