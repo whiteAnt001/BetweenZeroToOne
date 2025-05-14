@@ -1,5 +1,6 @@
 package me.bzo.bzo.service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import me.bzo.bzo.util.JwtProvider;
 import me.bzo.bzo.util.JwtUtil;
@@ -16,6 +17,7 @@ public class AuthService {
     private final SecurityConfig securityConfig;
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
+    private final JwtUtil jwtUtil;
 
     //회원가입 로직
     public void register(RegisterReuqest request) {
@@ -35,21 +37,21 @@ public class AuthService {
     }
 
     //로그인 로직
-    public Users login(LoginRequest request) {
+    public void login(LoginRequest request, HttpServletResponse response) {
         Users users = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("이메일이 존재하지 않습니다."));
 
         if(!securityConfig.passwordEncoder().matches(request.getPassword(), users.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
         }
-
-        //로그인 성공시 토큰 발급
-        return users;
-    }
     
-    //토큰 생성 메서드
-    public String createToken(Users user) {
-        return jwtProvider.createToken(user.getEmail());
+        // 토큰 생성
+        String accessToken = jwtUtil.generateAccessToken(users.getEmail(), users.getName(), users.getRole());
+        String refreshToken = jwtUtil.generateRefreshToken(users.getEmail());
+
+        // 쿠키에 토큰 저장
+        jwtUtil.addJwtToCookie(response, accessToken, "accessToken"); // 엑세스 토큰
+        jwtUtil.addJwtToCookie(response, refreshToken, "refreshToken"); // 리프레시 토큰
     }
     // 비밀번호 해싱
     public String encryptPassword(String rawPassword) {

@@ -1,9 +1,15 @@
 package me.bzo.bzo.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import me.bzo.bzo.entity.Post;
+import me.bzo.bzo.entity.Users;
 import me.bzo.bzo.repository.PostRepository;
 import me.bzo.bzo.service.PostService;
+import me.bzo.bzo.service.UserService;
+import me.bzo.bzo.util.JwtUtil;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +20,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Controller
 public class ViewController {
+    private final JwtUtil jwtUtil;
     private final PostRepository postRepository;
+    private final UserService userService;
 
     //로그인 화면
     @GetMapping("/login")
@@ -29,16 +37,36 @@ public class ViewController {
     }
     //플랫폼 메인화면
     @GetMapping("/")
-    private String home(Model model) {
+    private String home(HttpServletRequest request, Model model) {
         try {
+            // 게시글 목록 조회
             List<Post> posts = postRepository.findAll();
             model.addAttribute("posts", posts);
+
+            // 쿠키에서 access_token 가져오기 (이전에 저장한 이름과 일치시켜야 함)
+            String token = jwtUtil.getTokenFromCookieByName(request, "accessToken");
+
+            if (token != null && jwtUtil.validateToken(token)) {
+                // 토큰에서 사용자 정보 추출
+                Users user = userService.getUserInfoFormToken(token);
+                if (user != null) {
+                    model.addAttribute("userName", user.getName());
+                    model.addAttribute("userEmail", user.getEmail());
+                    model.addAttribute("userRole", user.getRole());
+                }
+            } else {
+                // 토큰이 없거나 유효하지 않으면 로그인 여부 표시용으로만 사용
+                model.addAttribute("userName", null);
+            }
+
             return "main";
         } catch (Exception e) {
+            e.printStackTrace();  // 디버깅용
             model.addAttribute("errorMessage", "게시글 조회 중 오류가 발생했습니다.");
             return "error";
         }
     }
+
 
     //게시글 수정 폼으로 이동
     @GetMapping("posts/{id}/edit")

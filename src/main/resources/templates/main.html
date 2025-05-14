@@ -14,7 +14,7 @@
 <div class="main-content">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="mb-0">인기 게시글</h3>
-        <p th:text="'현재 로그인한 사용자: ' + ${#authentication.name}"></p> <!-- ✅ -->
+        <p th:text="'현재 로그인한 사용자: ' + ${userName}"></p> <!-- ✅ -->
         <a href="/posts/new" class="btn btn-brand">게시글 작성</a>
     </div>
 

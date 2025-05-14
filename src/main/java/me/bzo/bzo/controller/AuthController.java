@@ -5,17 +5,11 @@ import lombok.RequiredArgsConstructor;
 import me.bzo.bzo.config.SecurityConfig;
 import me.bzo.bzo.dto.LoginRequest;
 import me.bzo.bzo.dto.RegisterReuqest;
-import me.bzo.bzo.dto.TokenResponse;
-import me.bzo.bzo.entity.Users;
 import me.bzo.bzo.service.AuthService;
-import me.bzo.bzo.util.CookieUtil;
 import me.bzo.bzo.util.JwtProvider;
-import org.apache.coyote.Response;
+import me.bzo.bzo.util.JwtUtil;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -24,6 +18,7 @@ public class AuthController {
     private final AuthService authService;
     private final JwtProvider jwtProvider;
     private final SecurityConfig securityConfig;
+    private final JwtUtil jwtUtil;
 
     // 회원가입
     @PostMapping("/register")
@@ -34,13 +29,12 @@ public class AuthController {
 
     // 로그인
     @PostMapping("/login")
-    private ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletResponse response){
-        // 로그인처리
-        Users user = authService.login(request);
-        // 토큰 생성
-        String token = jwtProvider.createToken(user.getEmail());
-        // 쿠키 생성 및 응답에 추가
-        response.addCookie(CookieUtil.createTokenCookie(token));
-        return ResponseEntity.ok(Map.of("token", token));
+    private ResponseEntity<String> login(@RequestBody LoginRequest request, HttpServletResponse response){
+        try {
+            authService.login(request,response);
+            return ResponseEntity.ok("로그인 성공");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
     }
 }
