@@ -1,0 +1,14 @@
+
+<div class="navbar" th:fragment="navbar">
+  <a class="logo" href="/">BZO</a>
+
+
+  <div class="nav-items">
+    <!-- 로그인이 되어있을 때 -->
+    <span th:if="${userName != null}" class="text-light me-3" th:text="${userName + ' 님'}">~~님</span>
+    <a th:if="${userName != null}" href="/logout" class="login-btn">로그아웃</a>
+
+    <!-- 비로그인 상태일 때 -->
+    <a th:if="${userName == null}" href="/login" class="login-btn">로그인</a>
+  </div>
+</div>

@@ -11,7 +11,7 @@ spring:
       hibernate:
         format_sql: true
   datasource:
-    url: jdbc:h2:file:C:/Users/bakjs/BetweenZeroToOne/data/testdb
+    url: jdbc:h2:file:C:/Users/9400F/test
     username: sa
     password:
     driver-class-name: org.h2.Driver

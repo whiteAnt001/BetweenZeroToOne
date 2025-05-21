@@ -71,7 +71,9 @@ public class PostService {
         List<Hashtag> hashtags = new ArrayList<>();
         for(String tagName : postRequest.getHashtags()){
             Hashtag hashTag = hashtagRepository.findByName(tagName).orElseGet(() ->hashtagRepository.save(new Hashtag(tagName)));
+            hashtags.add(hashTag);
         }
+        post.setHashtags(hashtags);
 
         return postRepository.save(post); //게시글 저장
     }
