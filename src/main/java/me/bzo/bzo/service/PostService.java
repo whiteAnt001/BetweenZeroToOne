@@ -31,6 +31,23 @@ public class PostService {
         return postRepository.findAll();
     }
 
+    // 게시글 삭제
+    @Transactional
+    public void deletePost(Long id, Long requestUserId) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+
+        if(!post.getUserId().equals(requestUserId)){
+            throw new SecurityException("삭제 권한이 없습니다.");
+        }
+
+        // 해당 게시글과 연결된 해시태그 연결끊기(제거)
+        post.getHashtags().clear();
+        postRepository.save(post); // 연결끊고 세이브 해줘야함 안 그럼 삭제 안 될 가능성 있음
+
+        //이후 삭제
+        postRepository.delete(post);
+    }
     //게시글 수정
     @Transactional
     public Post updatePost(Long id, PostRequest postRequest) {

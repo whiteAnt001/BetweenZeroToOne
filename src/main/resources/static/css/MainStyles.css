@@ -2,31 +2,12 @@
     --brand-darkgray: #2c2c2c;
 }
 
+a {
+    text-decoration: none;
+}
+
 body {
     background-color: #f8f9fa;
-}
-
-.sidebar {
-    width: 220px;
-    height: 100vh;
-    position: fixed;
-    background-color: white;
-    border-right: 1px solid #ddd;
-    padding-top: 30px;
-}
-
-.sidebar a {
-    display: block;
-    padding: 12px 20px;
-    color: #333;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.sidebar a:hover,
-.sidebar a.active {
-    background-color: #f1f1f1;
-    color: var(--brand-darkgray);
 }
 
 .main-content {

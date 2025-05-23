@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import me.bzo.bzo.entity.Users;
 import org.springframework.stereotype.Component;
 
 import jakarta.servlet.http.Cookie;
@@ -22,11 +23,12 @@ public class JwtUtil {
     private static final long REFRESH_TOKEN_EXPIRATION = 604800000L;  // 7일 (밀리초 단위)
 
     // 엑세스 토큰 생성
-    public String generateAccessToken(String email, String userName, String role) {
+    public String generateAccessToken(Users user) {
         return Jwts.builder()
-                .setSubject(email)
-                .claim("userName", userName)
-                .claim("role", role)
+                .setSubject(user.getEmail())
+                .claim("userId", user.getId())
+                .claim("userName", user.getName())
+                .claim("role", user.getRole())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
                 .signWith(key, SignatureAlgorithm.HS512)
@@ -87,6 +89,17 @@ public class JwtUtil {
     // JWT에서 사용자 이메일 추출
     public String getEmailFromToken(String token) {
         return getClaims(token).getSubject();
+    }
+    
+    // JWT에서 사용자 이름 추출
+    public String getUserNameFromToken(String token) {
+        return getClaims(token).get("userName", String.class);
+    }
+
+    // JWT에서 사용자 고유 ID 추출
+    public Long getUserIdFromToken(String token) {
+        Claims claims = getClaims(token);
+        return claims.get("userId", Long.class);
     }
 
     // 쿠키 삭제용

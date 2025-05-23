@@ -29,7 +29,7 @@
     </div>
     <div class="text-center mt-4">
       <button type="button" id="modify-btn" class="btn btn-brand">수정 완료</button>
-      <a href="/" class="btn btn-outline-secondary">취소</a>
+      <a href="/static" class="btn btn-outline-secondary">취소</a>
     </div>
   </form>
 </div>
@@ -40,7 +40,7 @@
     const id = document.getElementById('id').value;
     const title = document.getElementById('title').value;
     const content = document.getElementById('content').value;
-    const hashtags = document.getElementById('hashtags').value.split(',');
+    const hashtags = document.getElementById('hashtags').value.split(' ');
 
     try{
       const response = await fetch(`/api/posts/${id}`, {

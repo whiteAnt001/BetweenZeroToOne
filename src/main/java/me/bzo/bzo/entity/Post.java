@@ -17,6 +17,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 게시글 고유식별자
 
+    private Long userId;
     private String title; // 제목
     private String content; // 내용
     private String writer; // 작성자

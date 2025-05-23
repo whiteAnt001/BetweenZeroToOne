@@ -1,0 +1,54 @@
+a {
+    text-decoration: none;
+}
+
+.main-content {
+    margin-left: 220px;
+    padding: 20px;
+}
+
+.search-input {
+    width: 250px;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.9rem;
+    border: 1px solid #ccc;
+}
+
+.btn-search {
+    height: 38px;
+    font-size: 0.9rem;
+    border-radius: 20px;
+    background-color: #444;
+    color: white;
+    border: none;
+    padding: 0 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-create {
+    background-color: #444;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+    border-radius: 20px;
+    text-decoration: none;
+}
+
+.card-meta {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.tag {
+    background-color: #eee;
+    color: #333;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    margin-right: 5px;
+}

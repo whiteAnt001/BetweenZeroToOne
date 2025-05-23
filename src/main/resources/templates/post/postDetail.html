@@ -15,8 +15,8 @@
   <div class="post-detail">
     <h2 th:text="${post.title}">게시글 제목</h2>
     <div class="post-meta mb-4">
-      <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
-      <strong><span th:text="${post.writer}">작성자</span></strong>
+      작성자 : <strong><span th:text="${post.writer}">작성자</span></strong>
+      작성일 : <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
 <!--      조회 <span th:text="${post.viewCount}">0</span>-->
     </div>
     <div class="post-content" th:text="${post.content}">
@@ -29,7 +29,7 @@
 
   <div class="text-center mt-4">
     <a th:href="@{/posts/{id}/edit(id=${post.id})}" class="btn btn-outline-primary">수정</a>
-    <form th:action="@{/posts/{id}/delete(id=${post.id})}" method="post" class="d-inline">
+    <form th:action="@{/api/posts/{id}}" method="post" class="d-inline">
       <button type="submit" class="btn btn-outline-danger">삭제</button>
     </form>
   </div>

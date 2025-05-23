@@ -46,7 +46,7 @@ public class AuthService {
         }
     
         // 토큰 생성
-        String accessToken = jwtUtil.generateAccessToken(users.getEmail(), users.getName(), users.getRole());
+        String accessToken = jwtUtil.generateAccessToken(users);
         String refreshToken = jwtUtil.generateRefreshToken(users.getEmail());
 
         // 쿠키에 토큰 저장
