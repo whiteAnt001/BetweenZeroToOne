@@ -21,18 +21,19 @@ public class ViewController {
     private final PostRepository postRepository;
     private final UserService userService;
 
-    //로그인 화면
+    // 로그인 화면
     @GetMapping("/login")
     private String login(Model model) {
         return "login";
     }
 
-    //회원가입 화면
+    // 회원가입 화면
     @GetMapping("/signup")
     private String signup(Model model) {
         return "signup";
     }
-    //플랫폼 메인화면
+
+    // 플랫폼 메인화면
     @GetMapping("/")
     private String home(HttpServletRequest request, Model model) {
         try {
@@ -64,7 +65,7 @@ public class ViewController {
         }
     }
 
-    //QnA게시글 리스트로 이동
+    // QnA게시글 리스트로 이동
     @GetMapping("/posts/qna")
     public String qnaList(Model model) {
         List<Post> posts = postRepository.findByBoard("qna");
@@ -72,7 +73,7 @@ public class ViewController {
         return "post/board";
     }
 
-    //커뮤니티 게시글 리스트로 이동
+    // 커뮤니티 게시글 리스트로 이동
     @GetMapping("/posts/community")
     public String communityList(Model model) {
         List<Post> posts = postRepository.findByBoard("community");
@@ -80,7 +81,7 @@ public class ViewController {
         return "post/board";
     }
 
-    //Tip 게시글 리스트로 이동
+    // Tip 게시글 리스트로 이동
     @GetMapping("/posts/tip")
     public String tipList(Model model) {
         List<Post> posts = postRepository.findByBoard("tip");
@@ -88,7 +89,7 @@ public class ViewController {
         return "post/board";
     }
 
-    //etc 게시글 리스트로 이동
+    // etc 게시글 리스트로 이동
     @GetMapping("/posts/etc")
     public String etcList(Model model) {
         List<Post> posts = postRepository.findByBoard("etc");
@@ -96,7 +97,7 @@ public class ViewController {
         return "post/board";
     }
 
-    //게시글 수정 폼으로 이동
+    // 게시글 수정 폼으로 이동
     @GetMapping("/posts/{id}/edit")
     public String editPost(@PathVariable Long id, Model model) {
         Post updatePost = postRepository.findById(id).orElse(null);
@@ -104,7 +105,7 @@ public class ViewController {
         return "post/editPost";
     }
 
-    //게시글 작성 폼으로 이동
+    // 게시글 작성 폼으로 이동
     @GetMapping("/posts/new")
     public String createPostForm(Model model, HttpServletRequest request) {
         String token = jwtUtil.getTokenFromCookieByName(request, "accessToken");
@@ -120,12 +121,12 @@ public class ViewController {
         return "createPostForm";
     }
 
-    //게시글 상세보기
+    // 게시글 상세보기
     @GetMapping("/posts/{id}")
     public String postDetail(@PathVariable Long id, Model model) {
         Post post = postRepository.findById(id).orElse(null);
         model.addAttribute("post", post);
-        return "postDetail";
+        return "post/postDetail";
     }
 
 }
