@@ -2,6 +2,7 @@ package me.bzo.bzo.config;
 
 import lombok.RequiredArgsConstructor;
 import me.bzo.bzo.filter.JwtAuthenticationFilter;
+import me.bzo.bzo.service.CustomOAuth2UserService;
 import me.bzo.bzo.util.JwtProvider;
 import me.bzo.bzo.util.JwtUtil;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
     private final JwtUtil jwtUtil;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -29,11 +31,14 @@ public class SecurityConfig {
                         .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated()
                 )
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/oauth2/authorization/github")  // GitHub 로그인 페이지로 리다이렉트
+                        .defaultSuccessUrl("/loginSuccess")          // 로그인 성공 후 이동할 URL
+                )
                 .headers(headers -> headers
                         .frameOptions(frameOptions -> frameOptions.sameOrigin())  // sameOrigin 또는 disable() 가능
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class); // JWT 인증 필터 추가
-
 
         return http.build();
     }

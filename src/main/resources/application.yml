@@ -20,6 +20,25 @@ spring:
     console:
       enabled: true
       path: /h2-console
+
+  Security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: Ov23lij5STuc8y9nNySl
+            client-secret: ec72a738bfc1bc14bdc3049d0ac09a1adb6e649d
+            scope:
+              - read:user
+              - user:email
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            client-name: GitHub
+        provider:
+          github:
+            authorization-uri: https://github.com/login/oauth/authorize
+            token-uri: https://github.com/login/oauth/access_token
+            user-info-uri: https://api.github.com/user
+            user-name-attribute: id
 jwt:
   secret: 1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
   expiration: 3600000

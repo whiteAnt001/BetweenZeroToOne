@@ -21,6 +21,8 @@ public class Users {
     private String password; //비밀번호
     private String role;
     private LocalDateTime createdAt; //계정 생성일
+    private String githubToken; //갓허브 토큰
+    private String provider; //소셜 로그인 정보
 
 
     @PrePersist

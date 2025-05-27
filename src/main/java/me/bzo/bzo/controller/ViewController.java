@@ -8,6 +8,10 @@ import me.bzo.bzo.entity.Users;
 import me.bzo.bzo.repository.PostRepository;
 import me.bzo.bzo.service.UserService;
 import me.bzo.bzo.util.JwtUtil;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +29,19 @@ public class ViewController {
     @GetMapping("/login")
     private String login(Model model) {
         return "login";
+    }
+
+    @GetMapping("/loginSuccess")
+    public String loginSuccess(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null || !(authentication.getPrincipal() instanceof OAuth2User)) {
+            return "redirect:/oauth2/authorization/github";
+        }
+
+        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+        String username = oAuth2User.getAttribute("email");
+        System.out.println("로그인한 사용자 이메일" + username);
+        return "redirect:/";
     }
 
     // 회원가입 화면
@@ -118,7 +135,7 @@ public class ViewController {
         model.addAttribute("userName", userName);
         model.addAttribute("postRequest", new PostRequest());
 
-        return "createPostForm";
+        return "post/createPostForm";
     }
 
     // 게시글 상세보기
